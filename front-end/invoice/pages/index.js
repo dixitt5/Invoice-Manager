@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
+import "animate.css";
 import { useEffect, useRef, useState } from "react";
 import styles from "../styles/Home.module.css";
 import Web3Modal from "web3modal";
@@ -23,6 +24,7 @@ export default function Home() {
   const [Seller, setSeller] = useState("");
   const [Time, setTime] = useState("");
   const [Amount, setAmounti] = useState("");
+  const [paymentStatus, setpaymentStatus] = useState("");
 
   const addInvoiceData = async () => {
     try {
@@ -112,6 +114,7 @@ export default function Home() {
       setLoading(true);
       await tx.wait();
       setLoading(false);
+      setpaymentStatus(`Payment status set to ${_Status}`);
     } catch (error) {
       console.error(error);
     }
@@ -130,6 +133,7 @@ export default function Home() {
       const a = await tx.wait();
       setLoading(false);
       return a;
+      console.log(a);
     } catch (error) {
       console.error(error);
     }
@@ -194,11 +198,10 @@ export default function Home() {
             onChange={(e) => setAmount(e.target.value)}
             className={styles.input}
           />
-          <div>
-            <button className={styles.button1} onClick={addInvoiceData}>
-              Create
-            </button>
-          </div>
+
+          <button className={styles.button2} onClick={addInvoiceData}>
+            Create
+          </button>
         </div>
       );
     } else if (searchTab) {
@@ -211,13 +214,11 @@ export default function Home() {
               placeholder="case-sensitive PAN"
               onChange={(e) => setSearchPAN(e.target.value)}
             />
-          </div>
-          <div>
             <button className={styles.button1} onClick={showSearchedPANs}>
               Search
             </button>
           </div>
-          <div className="container">
+          <div className={styles.containercolor}>
             <p> Buyer : {first_state}</p>
             <p>Seller : {Seller}</p>
             <p>
@@ -251,13 +252,11 @@ export default function Home() {
             className={styles.input}
           />
 
-          <div>
-            <button className={styles.button1} onClick={setPaymentStatus}>
-              Change Status
-            </button>
-            <br></br>
-            returnPaymentStatus();
-          </div>
+          <button className={styles.button1} onClick={setPaymentStatus}>
+            Change Status
+          </button>
+          <br></br>
+          <p>{paymentStatus}</p>
         </div>
       );
     }
@@ -299,7 +298,7 @@ export default function Home() {
   }, [walletConnected]);
 
   return (
-    <div>
+    <div className="animate__animated animate__fadeIn">
       <Head>
         <title>Invoice manager</title>
         <meta name="description" content="Invoice-manager" />
